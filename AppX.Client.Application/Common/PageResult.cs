@@ -1,4 +1,4 @@
-﻿namespace Restaurants.Application.Common
+﻿namespace AppX.Client.Application.Common
 {
     public class PageResult<T>
     {

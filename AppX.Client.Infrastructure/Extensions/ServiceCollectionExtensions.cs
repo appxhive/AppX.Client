@@ -1,31 +1,36 @@
-﻿using AppX.Client.Domain.Entities;
+﻿using AppX.Client.Domain.Entities.AppUser;
+using AppX.Client.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Restaurants.Infrastructure.Persistence;
 
-namespace Restaurants.Infrastructure.Extensions;
+namespace AppX.Client.Infrastructure.Extensions;
 
 public static class ServiceCollectionExtensions
 {
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        //MSSQL :
         //var connectionStringMsSql = configuration.GetConnectionString("ClientsMsSqlDb");
         //services.AddDbContext<UsersDbContext>(
-        //    options => 
+        //    options =>
         //    options.UseSqlServer(connectionStringMsSql)
         //    );//.EnableSensitiveDataLogging()
 
+        //MYSQL :
         var connectionStringMySql = configuration.GetConnectionString("ClientsMySqlDb");
-        services.AddDbContext<UsersDbContext>(
+        services.AddDbContext<AppUsersDbContext>(
             options =>
             options.UseMySql(connectionStringMySql, ServerVersion.AutoDetect(connectionStringMySql),
             options => options.EnableRetryOnFailure())); //new MySqlServerVersion(new Version(8, 0, 23))
 
-        services.AddIdentityApiEndpoints<User>()
+        //Identity : 
+        services.AddIdentityApiEndpoints<UserProfile>()
             .AddRoles<IdentityRole>()//support role based claim authentication
-            //.AddClaimsPrincipalFactory<RestaurantsUserClaimsPrincipalFactory>()
-            .AddEntityFrameworkStores<UsersDbContext>();
+            //.AddClaimsPrincipalFactory<ClientsUserClaimsPrincipalFactory>()
+            .AddEntityFrameworkStores<AppUsersDbContext>();
+
+
     }
 }
