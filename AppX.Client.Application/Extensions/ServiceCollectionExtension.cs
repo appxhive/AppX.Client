@@ -1,4 +1,4 @@
-﻿using AppX.Client.Application.AppUsers.AppUserContext;
+﻿using AppX.Client.Application.BusinessCore.AppUsers.AppUserContext;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;

@@ -17,10 +17,19 @@ try
 
     builder.Services.AddApplication();
 
+    builder.Services.AddControllersWithViews();
+
     var app = builder.Build();
 
     app.UseMiddleware<ErrorHandlingMiddleware>();
+
     app.UseMiddleware<RequestTimeLoggingMiddleware>();
+
+    app.UseStaticFiles();
+
+    app.UseHttpsRedirection();
+
+    app.UseRouting();
 
     app.UseSerilogRequestLogging();
 
@@ -30,21 +39,18 @@ try
         app.UseSwaggerUI();
     }
 
-    app.UseHttpsRedirection();
+    app.UseAuthentication();
+    app.UseAuthorization();
+
+    app.UseEndpoints(endpoints => endpoints.MapControllers());
 
     app.MapGet("/", () => "AppX Clients API");
 
-    app.MapGroup("api/IdentityUser")
-    .WithTags("AppX-IdentityUser Endpoints")
+    app.MapGroup("api/Identity")
+    .WithTags("Identity")
     .MapIdentityApi<UserProfile>();
 
-    //app.MapGroup("api/Client")
-    //.WithTags("AppX-Client Endpoints")
-    //.MapIdentityApi<ClientProfile>();
-
-    app.UseAuthorization();
-
-    app.MapControllers();
+    app.UseEndpoints(endpoints => endpoints.MapControllers());
 
     app.Run();
 }

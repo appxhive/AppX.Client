@@ -1,9 +1,11 @@
 ﻿using AppX.Client.Domain.Entities.AppUser;
+using AppX.Client.Domain.Entities.Client;
 using AppX.Client.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace AppX.Client.Infrastructure.Extensions;
 
@@ -28,9 +30,20 @@ public static class ServiceCollectionExtensions
         //Identity : 
         services.AddIdentityApiEndpoints<UserProfile>()
             .AddRoles<IdentityRole>()//support role based claim authentication
-            //.AddClaimsPrincipalFactory<ClientsUserClaimsPrincipalFactory>()
-            .AddEntityFrameworkStores<AppUsersDbContext>();
+                                     //.AddClaimsPrincipalFactory<ClientsUserClaimsPrincipalFactory>()
+            .AddEntityFrameworkStores<AppUsersDbContext>()
+            .AddDefaultTokenProviders();
 
+        //services.AddIdentityCore<UserProfile>(opt =>
+        //{
+        //    opt.Password.RequireNonAlphanumeric = false;
+        //})
+        //.AddRoles<IdentityRole>()
+        //.AddRoleManager<RoleManager<IdentityRole>>()
+        //.AddEntityFrameworkStores<AppUsersDbContext>();
 
+        //services.AddIdentity<UserProfile, IdentityRole>()
+        //    .AddEntityFrameworkStores<AppUsersDbContext>()
+        //    .AddDefaultTokenProviders();
     }
 }

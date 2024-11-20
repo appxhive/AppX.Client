@@ -18,7 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="AppUsers\DTOs\" />
+    <Folder Include="BusinessCore\AppUsers\DTOs\" />
+    <Folder Include="BusinessCore\Clients\" />
   </ItemGroup>
 
 </Project>
