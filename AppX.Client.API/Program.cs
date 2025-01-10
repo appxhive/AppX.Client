@@ -1,9 +1,11 @@
 using AppX.Client.API.Extensions;
 using AppX.Client.API.Middlewares;
 using AppX.Client.Application.Extensions;
-using AppX.Client.Domain.Entities.AppUser;
+using AppX.Client.Domain.Entities.UserAccount;
 using AppX.Client.Infrastructure.Extensions;
 using Serilog;
+
+//#################################################################################
 
 try
 {
@@ -63,6 +65,8 @@ finally
     Log.CloseAndFlush();
 }
 
+//#################################################################################
+
 /*** Use this when creating Database thru EF core CLI or dotnet EF Core CLI****
  * 
  * Drop existing DB and delete migration files.
@@ -89,4 +93,5 @@ finally
 }
  
  */
+
 

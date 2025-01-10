@@ -18,7 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="BusinessCore\AppUsers\DTOs\" />
+    <Folder Include="BusinessCore\Memberships\Commands\" />
+    <Folder Include="BusinessCore\Memberships\Queries\" />
+    <Folder Include="BusinessCore\UserAccounts\DTOs\" />
     <Folder Include="BusinessCore\Clients\" />
   </ItemGroup>
 
