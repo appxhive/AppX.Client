@@ -34,6 +34,7 @@ namespace AppX.Client.API.Middlewares
 
                 await context.Response.WriteAsync("Something went wrong");
             }
-        }
+         }
     }
 }
+ 

@@ -1,11 +1,13 @@
 ﻿using AppX.Client.Domain.Entities.UserAccount;
-using AppX.Client.Domain.Entities.Client;
+using AppX.Client.Domain.Interfaces.Email;
+using AppX.Client.Domain.Interfaces.Identity;
 using AppX.Client.Infrastructure.Persistence;
+using AppX.Client.Infrastructure.Services.Email;
+using AppX.Client.Infrastructure.Services.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace AppX.Client.Infrastructure.Extensions;
 
@@ -33,6 +35,10 @@ public static class ServiceCollectionExtensions
                                      //.AddClaimsPrincipalFactory<ClientsUserClaimsPrincipalFactory>()
             .AddEntityFrameworkStores<ClientsDbContext>()
             .AddDefaultTokenProviders();
+
+        services.AddScoped<IIdentityService, IdentityService>();
+
+        services.AddScoped<IEmailComposer, EmailComposer>();
 
         //services.AddIdentityCore<UserProfile>(opt =>
         //{

@@ -1,35 +1,34 @@
 ﻿using AppX.Client.Domain.Entities.UserAccount;
-using AutoMapper;
+using AppX.Client.Domain.Interfaces.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
 namespace AppX.Client.Application.BusinessCore.UserAccounts.Commands.RegisterUser
 {
-        public class RegisterUserCommandHandler
+    public class RegisterUserCommandHandler
                (ILogger<RegisterUserCommandHandler> logger,
-               IMapper mapper,
-               UserManager<UserProfile> userManager)
+               UserManager<UserProfile> userManager,
+               IIdentityService identityService)
                : IRequestHandler<RegisterUserCommand, bool>
         {
             public async Task<bool> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
             {
-                logger.LogInformation("{UserEmail} Registering a new user {@User}",
-                  request.Email,
-                  request);
+                logger.LogInformation("Registering a new user {@User}", request);
 
-                var newUser = new UserProfile
+                //apply auto mapping - when payload is correct, all required props are supplied
+                var user = new UserProfile
                 {
-                    UserName = request.Email, //Temporarily make email as Username
+                    UserName = request.Email, //Temporarily make email as user name
                     Email = request.Email,
                     PasswordHash = request.Password,
                 };
 
-                var result = await userManager.CreateAsync(newUser, request.Password);
+                var result = await userManager.CreateAsync(user, request.Password);
 
                 if (result.Succeeded)
                 {
-                    return true;
+                    return await identityService.SendEmailConfirmationTokenAsync(user, request.Email);
                 }
 
                 return false;

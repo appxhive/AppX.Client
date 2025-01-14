@@ -1,4 +1,5 @@
 ﻿using AppX.Client.API.Middlewares;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
@@ -6,7 +7,7 @@ namespace AppX.Client.API.Extensions
 {
     public static class WebApplicationBuilderExtensions
     {
-        //Seperating services used my presentation modules
+        //Separating services used by presentation modules
         public static void AddPresentation(this WebApplicationBuilder builder)
         {
             builder.Services.AddAuthentication();
@@ -37,6 +38,10 @@ namespace AppX.Client.API.Extensions
             });
 
             builder.Services.AddEndpointsApiExplorer();
+
+            builder.Services.AddHttpContextAccessor();
+
+            builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
             builder.Services.AddScoped<ErrorHandlingMiddleware>();
             builder.Services.AddScoped<RequestTimeLoggingMiddleware>();

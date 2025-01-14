@@ -9,7 +9,7 @@ using Serilog;
 
 try
 {
-    Log.Information("AppX Clients API startup started...");
+    Log.Information("AppX Client API startup started...");
 
     var builder = WebApplication.CreateBuilder(args);
 
@@ -46,7 +46,7 @@ try
 
     app.UseEndpoints(endpoints => endpoints.MapControllers());
 
-    app.MapGet("/", () => "AppX Clients API");
+    app.MapGet("/", () => "AppX Client API");
 
     app.MapGroup("api/Identity")
     .WithTags("Identity")
@@ -58,7 +58,7 @@ try
 }
 catch (Exception ex)
 {
-    Log.Fatal(ex, "AppX Clients API startup failed.");
+    Log.Fatal(ex, "AppX Client API startup failed.");
 }
 finally
 {

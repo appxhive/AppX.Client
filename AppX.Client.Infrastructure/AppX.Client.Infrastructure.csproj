@@ -22,6 +22,9 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+    <Folder Include="Services\Client\Registration\" />
+    <Folder Include="Services\Membership\" />
+    <Folder Include="Services\UserAccount\" />
   </ItemGroup>
 
 </Project>
