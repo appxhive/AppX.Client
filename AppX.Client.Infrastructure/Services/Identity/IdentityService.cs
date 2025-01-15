@@ -17,7 +17,8 @@ namespace AppX.Client.Infrastructure.Services.Identity
         IConfiguration configuration,
         IActionContextAccessor actionContextAccessor,
         IUrlHelperFactory urlHelperFactory,
-        IEmailComposer emailComposer) : IIdentityService
+        IEmailComposer emailComposer,
+        SignInManager<UserProfile> signInManager) : IIdentityService
     {
         public async Task<ApiResponse> ConfirmEmailAsync(string userId, string token)
         {
@@ -45,6 +46,7 @@ namespace AppX.Client.Infrastructure.Services.Identity
                 response.StatusCode = HttpStatusCode.OK;
                 response.Data = result;
                 response.ResponseMessage = "Email confirmed successfully!";
+                response.Success = true;
                 return response;
             }
 
@@ -105,6 +107,85 @@ namespace AppX.Client.Infrastructure.Services.Identity
 
                 return false;
             }
+        }
+
+        public async Task<ApiResponse> LogInUserAsync(LoginUserModel loginUserDto)
+        {
+            var response = new ApiResponse
+            {
+                StatusCode = HttpStatusCode.BadRequest,
+                Data = null,
+                MetaData = null,
+                ResponseMessage = null,
+            };
+
+            var user = await userManager.FindByEmailAsync(loginUserDto.Email);
+
+            if (user == null)
+            {
+                response.StatusCode = HttpStatusCode.NotFound;
+                response.ResponseMessage = "Incorrect email or password.";
+                return response;
+            }
+
+            await userManager.GetTwoFactorEnabledAsync(user);
+
+            var result = await signInManager.PasswordSignInAsync(loginUserDto.Email, loginUserDto.Password,
+                loginUserDto.RememberMe,
+                lockoutOnFailure: true);
+
+            response.Data = result;
+
+            if (!user.EmailConfirmed)
+            {
+                response.StatusCode = HttpStatusCode.Accepted;
+                response.ResponseMessage = "An email verification has been sent to you. Please confirm your email."; //For additional security, require you to confirm your email first
+                return response;
+            }
+
+            if (result.IsNotAllowed)
+            {
+                response.StatusCode = HttpStatusCode.Unauthorized;
+                response.ResponseMessage = "User is not allowed. Please contact your administrator.";
+                return response;
+            }
+
+            if (result.IsLockedOut)
+            {
+                response.ResponseMessage = "User is locked out.";
+                return response;
+            }
+
+            //if (result.RequiresTwoFactor)
+            //{
+            //    response.StatusCode = HttpStatusCode.Accepted;
+            //    response.ResponseMessage = "Two factor authentication is required.";
+            //    //redirect to Page where VerifyAuthenticatorCode is.
+            //    return response;
+            //}
+
+            //if two factor auth is enabled, redirect to Authenticator app and user must verify code before they can redirect to homepage 
+
+            /*
+                upon sign in of a user regardless of role - should send notification
+                on registered mobile so, user must confirmed mobile contact.
+                if user did not confirmed his/her mobile then he cannot receive notification
+                from Azure AD - for two factor authentication
+                TODO: setup, register app and configured on Azure AD so that notification is enable.
+            */
+
+            if (result.Succeeded)
+            {
+                response.StatusCode = HttpStatusCode.OK;
+                response.Success = true;
+                response.ResponseMessage = $"You have successfully signed in! Welcome, {loginUserDto.Email}!";
+            }
+            else
+            {
+                response.ResponseMessage = "Invalid login attempt.";
+            }
+
+            return response;
         }
     }
 }

@@ -49,7 +49,6 @@ namespace AppX.Client.API.Extensions
             builder.Host.UseSerilog((context, config) =>
             {
                 config.ReadFrom.Configuration(context.Configuration);
-
                 //config
                 //.MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 //.MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Information)

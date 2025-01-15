@@ -8,6 +8,7 @@ namespace AppX.Client.Domain.Entities.Common
         public object? Data { get; set; }
         public MetaData? MetaData { get; set; }
         public string? ResponseMessage { get; set; }
+        public bool Success { get; set; } = false;
     }
 
     public class ApiResponse<T>

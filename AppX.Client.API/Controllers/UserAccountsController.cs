@@ -1,4 +1,5 @@
-﻿using AppX.Client.Application.BusinessCore.UserAccounts.Commands.RegisterUser;
+﻿using AppX.Client.Application.BusinessCore.UserAccounts.Commands.LoginUser;
+using AppX.Client.Application.BusinessCore.UserAccounts.Commands.RegisterUser;
 using AppX.Client.Application.BusinessCore.UserAccounts.Queries.GetUserConfirmation;
 using AppX.Client.Domain.Interfaces.Identity;
 using MediatR;
@@ -23,6 +24,14 @@ namespace AppX.Client.API.Controllers
         public async Task<ActionResult> ConfirmEmail(string userId, string token)
         {
             var result = await mediator.Send(new GetUserConfirmationQuery(userId, token));
+
+            return StatusCode((int)result.StatusCode, result);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> SignIn(LoginUserCommand model)
+        {
+            var result = await mediator.Send(model);
 
             return StatusCode((int)result.StatusCode, result);
         }
