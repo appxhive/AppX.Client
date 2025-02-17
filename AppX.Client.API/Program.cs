@@ -48,9 +48,9 @@ try
 
     app.MapGet("/", () => "AppX Client API");
 
-    app.MapGroup("api/Identity")
-    .WithTags("Identity")
-    .MapIdentityApi<UserProfile>();
+    //app.MapGroup("api/Identity")
+    //.WithTags("Identity")
+    //.MapIdentityApi<UserProfile>();
 
     app.UseEndpoints(endpoints => endpoints.MapControllers());
 

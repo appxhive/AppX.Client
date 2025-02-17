@@ -5,10 +5,10 @@ using Microsoft.Extensions.Logging;
 
 namespace AppX.Client.Application.BusinessCore.UserAccounts.Queries.GetUserConfirmation
 {
-    public class GetUserConfirmationQueryHandler(ILogger<GetUserConfirmationQueryHandler> logger,
-        IIdentityService identityService) : IRequestHandler<GetUserConfirmationQuery, ApiResponse>
+    public class UserEmailConfirmationQueryHandler(ILogger<UserEmailConfirmationQueryHandler> logger,
+        IIdentityService identityService) : IRequestHandler<UserEmailConfirmationQuery, ApiResponse>
     {
-        public async Task<ApiResponse> Handle(GetUserConfirmationQuery request, CancellationToken cancellationToken)
+        public async Task<ApiResponse> Handle(UserEmailConfirmationQuery request, CancellationToken cancellationToken)
         {
             logger.LogInformation("Get user confirmation email.");
 

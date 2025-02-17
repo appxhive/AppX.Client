@@ -6,8 +6,15 @@ namespace AppX.Client.Domain.Interfaces.Identity
     public interface IIdentityService
     {
         Task<ApiResponse> ConfirmEmailAsync(string userId, string token);
-        Task<string> GenerateEmailConfirmationTokenAsync(UserProfile user);
         Task<bool> SendEmailConfirmationTokenAsync(UserProfile user, string recipient);
         Task<ApiResponse> LogInUserAsync(LoginUserModel loginUserDto);
+        Task<ApiResponse> EnableAuthenticatorAsync();
+        Task<ApiResponse> EnableAuthenticatorAsync(TwoFactorAuthentication twoFactorAuth);
+        Task<ApiResponse> SignOutAsync();
+        Task<ApiResponse> VerifyAuthenticatorCodeAsync(bool rememberMe = false);
+        Task<ApiResponse> VerifyAuthenticatorCodeAsync(VerifyAuthenticatorDto model);
+        Task<ApiResponse> RemoveAuthenticator();
+        ApiResponse ForgotPassword();
+        Task<ApiResponse> ForgotPassword(ForgotPasswordDto model);
     }
 }

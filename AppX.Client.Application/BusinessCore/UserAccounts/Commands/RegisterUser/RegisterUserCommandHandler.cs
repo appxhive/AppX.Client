@@ -21,7 +21,7 @@ namespace AppX.Client.Application.BusinessCore.UserAccounts.Commands.RegisterUse
                 {
                     UserName = request.Email, //Temporarily make email as user name
                     Email = request.Email,
-                    PasswordHash = request.Password,
+                    PasswordHash = request.Password, //implement Password salt and password encryption or password hash
                 };
 
                 var result = await userManager.CreateAsync(user, request.Password);
