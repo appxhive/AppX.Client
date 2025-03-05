@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace AppX.Client.Infrastructure.Extensions;
 
@@ -15,26 +16,40 @@ public static class ServiceCollectionExtensions
 {
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        //PostgreSql:
+        services.AddDbContext<AppxhiveDbContext>(options =>
+        options.UseNpgsql(configuration.GetConnectionString("AppxhivePostgreSqlDb")));
+
+        //services.AddIdentity<IdentityUser, IdentityRole>()
+        //.AddEntityFrameworkStores<AppxhiveDbContext>()
+        //.AddDefaultTokenProviders();
+
+        //Identity : 
+        services.AddIdentityApiEndpoints<UserProfile>()
+            .AddRoles<IdentityRole>()
+            .AddEntityFrameworkStores<AppxhiveDbContext>()
+            .AddDefaultTokenProviders();
+
         //MSSQL :
-        //var connectionStringMsSql = configuration.GetConnectionString("ClientsMsSqlDb");
+        //var connectionStringMsSql = configuration.GetConnectionString("AppxhiveMsSqlDb");
         //services.AddDbContext<UsersDbContext>(
         //    options =>
         //    options.UseSqlServer(connectionStringMsSql)
         //    );//.EnableSensitiveDataLogging()
 
         //MYSQL :
-        var connectionStringMySql = configuration.GetConnectionString("ClientsMySqlDb");
-        services.AddDbContext<ClientsDbContext>(
-            options =>
-            options.UseMySql(connectionStringMySql, ServerVersion.AutoDetect(connectionStringMySql),
-            options => options.EnableRetryOnFailure())); //new MySqlServerVersion(new Version(8, 0, 23))
+        //var connectionStringMySql = configuration.GetConnectionString("AppxhiveMySqlDb");
+        //services.AddDbContext<AppxhiveDbContext>(
+        //    options =>
+        //    options.UseMySql(connectionStringMySql, ServerVersion.AutoDetect(connectionStringMySql),
+        //    options => options.EnableRetryOnFailure())); //new MySqlServerVersion(new Version(8, 0, 23))
 
         //Identity : 
-        services.AddIdentityApiEndpoints<UserProfile>()
-            .AddRoles<IdentityRole>()//support role based claim authentication
-                                     //.AddClaimsPrincipalFactory<ClientsUserClaimsPrincipalFactory>()
-            .AddEntityFrameworkStores<ClientsDbContext>()
-            .AddDefaultTokenProviders();
+        //services.AddIdentityApiEndpoints<UserProfile>()
+        //    .AddRoles<IdentityRole>()//support role based claim authentication
+        //                             //.AddClaimsPrincipalFactory<ClientsUserClaimsPrincipalFactory>()
+        //    .AddEntityFrameworkStores<AppxhiveDbContext>()
+        //    .AddDefaultTokenProviders();
 
         services.AddScoped<IIdentityService, IdentityService>();
 

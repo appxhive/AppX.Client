@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace AppX.Client.Infrastructure.Repositories.UserAccount
 {
-    internal class UserAccountsRepository(ClientsDbContext dbContext) : IUserAccountRepository
+    internal class UserAccountsRepository(AppxhiveDbContext dbContext) : IUserAccountRepository
     {
         public async Task<Guid> Create(UserProfile entity)
         {

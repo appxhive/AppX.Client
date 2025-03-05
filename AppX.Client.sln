@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppX.Client.API", "AppX.Client.API\AppX.Client.API.csproj", "{60CA6B0D-8363-4B75-80ED-6B913DB9D0CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppX.Client.API", "AppX.Client.API\AppX.Client.API.csproj", "{60CA6B0D-8363-4B75-80ED-6B913DB9D0CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppX.Client.Application", "AppX.Client.Application\AppX.Client.Application.csproj", "{18649A57-C541-4378-92A8-2FD96D78B11A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppX.Client.Application", "AppX.Client.Application\AppX.Client.Application.csproj", "{18649A57-C541-4378-92A8-2FD96D78B11A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppX.Client.Domain", "AppX.Client.Domain\AppX.Client.Domain.csproj", "{900B6193-A7D1-4CB2-9875-2A24420E62EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppX.Client.Domain", "AppX.Client.Domain\AppX.Client.Domain.csproj", "{900B6193-A7D1-4CB2-9875-2A24420E62EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppX.Client.Infrastructure", "AppX.Client.Infrastructure\AppX.Client.Infrastructure.csproj", "{8E57AC30-BB4A-4383-AA5F-980E93F5E39D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppX.Client.Infrastructure", "AppX.Client.Infrastructure\AppX.Client.Infrastructure.csproj", "{8E57AC30-BB4A-4383-AA5F-980E93F5E39D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppX.TestClient.B2CApp", "AppX.TestClient.B2CApp\AppX.TestClient.B2CApp.csproj", "{98EC04E5-79EA-4A42-A6A3-76CCB955FEE9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{8E57AC30-BB4A-4383-AA5F-980E93F5E39D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E57AC30-BB4A-4383-AA5F-980E93F5E39D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E57AC30-BB4A-4383-AA5F-980E93F5E39D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98EC04E5-79EA-4A42-A6A3-76CCB955FEE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98EC04E5-79EA-4A42-A6A3-76CCB955FEE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98EC04E5-79EA-4A42-A6A3-76CCB955FEE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98EC04E5-79EA-4A42-A6A3-76CCB955FEE9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
