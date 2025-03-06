@@ -25,15 +25,10 @@ namespace AppX.Client.Infrastructure.Persistence
         }
     }
 
-    //public class AppxhiveDbContext : IdentityDbContext
     public class AppxhiveDbContext(DbContextOptions<AppxhiveDbContext> options) : IdentityDbContext<UserProfile>(options)
     {
         internal DbSet<UserProfile> UserProfiles { get; set; }
         internal DbSet<ClientProfile> Clients { get; set; }
-
-        //public AppxhiveDbContext(DbContextOptions<AppxhiveDbContext> options) : base(options)
-        //{
-        //}
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

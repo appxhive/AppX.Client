@@ -9,11 +9,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Serilog.Core;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace AppX.Client.Infrastructure.Services.Identity
 {
@@ -25,10 +28,14 @@ namespace AppX.Client.Infrastructure.Services.Identity
         IEmailComposer emailComposer,
         SignInManager<UserProfile> signInManager,
         IHttpContextAccessor httpContextAccesor,
-        UrlEncoder urlEncoder) : IIdentityService
+        UrlEncoder urlEncoder,
+        ILogger<IdentityService> logger
+        ) : IIdentityService
     {
         public async Task<ApiResponse> ConfirmEmailAsync(string userId, string token)
         {
+            logger.LogInformation($"ConfirmEmailAsync has been invoked for {userId}");
+
             var response = new ApiResponse
             {
                 StatusCode = HttpStatusCode.BadRequest,
@@ -65,6 +72,8 @@ namespace AppX.Client.Infrastructure.Services.Identity
 
         public async Task<bool> SendEmailConfirmationTokenAsync(UserProfile user, string recipient)
         {
+            logger.LogInformation($"SendEmailConfirmationTokenAsync has been invoked for user {user.Email}");
+
             var url = $"{configuration["AppXHive:Host"]}" + "Email/SendAsync";
 
             var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -114,6 +123,8 @@ namespace AppX.Client.Infrastructure.Services.Identity
 
         public async Task<ApiResponse> LogInUserAsync(LoginUserModel loginUserDto)
         {
+            logger.LogInformation($"LogInUserAsync has been invoked for user {loginUserDto.Email}");
+
             var response = new ApiResponse
             {
                 StatusCode = HttpStatusCode.BadRequest,
@@ -328,6 +339,8 @@ namespace AppX.Client.Infrastructure.Services.Identity
 
             ArgumentNullException.ThrowIfNull(httpContextAccesor.HttpContext);
 
+            logger.LogInformation($"SignOutAsync has been invoked for user {httpContextAccesor.HttpContext.User?.Identity?.Name}");
+
             await signInManager.SignOutAsync();
             await httpContextAccesor.HttpContext.SignOutAsync();
 
@@ -463,6 +476,8 @@ namespace AppX.Client.Infrastructure.Services.Identity
 
         public async Task<ApiResponse> ForgotPassword(ForgotPasswordDto model)
         {
+            logger.LogInformation($"ForgotPassword has been invoked for user {model.Email}");
+
             var response = new ApiResponse
             {
                 StatusCode = HttpStatusCode.BadRequest,

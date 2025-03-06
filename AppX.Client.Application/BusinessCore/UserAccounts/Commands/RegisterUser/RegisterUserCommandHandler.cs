@@ -14,7 +14,7 @@ namespace AppX.Client.Application.BusinessCore.UserAccounts.Commands.RegisterUse
         {
             public async Task<bool> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
             {
-                logger.LogInformation("Registering a new user {@User}", request);
+                logger.LogInformation("Registering a new user {@User}", request.Email);
 
                 //apply auto mapping - when payload is correct, all required props are supplied
                 var user = new UserProfile
