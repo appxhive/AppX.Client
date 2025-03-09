@@ -10,9 +10,17 @@ namespace AppX.Client.API.Extensions
         //Separating services used by presentation modules
         public static void AddPresentation(this WebApplicationBuilder builder)
         {
+            builder.Services.AddHttpContextAccessor();
+
+            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); //for empty queryString => reset password
+
+            builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
             builder.Services.AddAuthentication();
 
             builder.Services.AddControllers();
+
+            builder.Services.AddEndpointsApiExplorer();
 
             builder.Services.AddSwaggerGen(config =>
             {
@@ -37,12 +45,7 @@ namespace AppX.Client.API.Extensions
                 });
             });
 
-            builder.Services.AddEndpointsApiExplorer();
-
-            builder.Services.AddHttpContextAccessor();
-
-            builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-
+            builder.Services.AddScoped<CustomHttpContextMiddleware>();
             builder.Services.AddScoped<ErrorHandlingMiddleware>();
             builder.Services.AddScoped<RequestTimeLoggingMiddleware>();
 

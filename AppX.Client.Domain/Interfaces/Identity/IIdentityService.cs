@@ -12,9 +12,11 @@ namespace AppX.Client.Domain.Interfaces.Identity
         Task<ApiResponse> EnableAuthenticatorAsync(TwoFactorAuthentication twoFactorAuth);
         Task<ApiResponse> SignOutAsync();
         Task<ApiResponse> VerifyAuthenticatorCodeAsync(bool rememberMe = false);
-        Task<ApiResponse> VerifyAuthenticatorCodeAsync(VerifyAuthenticatorDto model);
+        Task<ApiResponse> VerifyAuthenticatorCodeAsync(VerifyAuthenticatorDto dto);
         Task<ApiResponse> RemoveAuthenticator();
-        ApiResponse ForgotPassword();
-        Task<ApiResponse> ForgotPassword(ForgotPasswordDto model);
+        Task<ApiResponse> ResetPassword(string code = null);
+        Task<ApiResponse> ResetPassword(ResetPasswordDto dto);
+        Task<ApiResponse> ForgotPassword();
+        Task<ApiResponse> ForgotPassword(ForgotPasswordDto dto);
     }
 }

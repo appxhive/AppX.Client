@@ -1,7 +1,6 @@
 using AppX.Client.API.Extensions;
 using AppX.Client.API.Middlewares;
 using AppX.Client.Application.Extensions;
-using AppX.Client.Domain.Entities.UserAccount;
 using AppX.Client.Infrastructure.Extensions;
 using Serilog;
 
@@ -13,15 +12,18 @@ try
 
     var builder = WebApplication.CreateBuilder(args);
 
-    builder.Services.AddInfrastructure(builder.Configuration);
+    builder.Services.AddMvc();
 
+    builder.Services.AddControllersWithViews();
     builder.AddPresentation();
 
     builder.Services.AddApplication();
 
-    builder.Services.AddControllersWithViews();
+    builder.Services.AddInfrastructure(builder.Configuration);
 
     var app = builder.Build();
+
+    app.UseMiddleware<CustomHttpContextMiddleware>();
 
     app.UseMiddleware<ErrorHandlingMiddleware>();
 
@@ -43,14 +45,6 @@ try
 
     app.UseAuthentication();
     app.UseAuthorization();
-
-    app.UseEndpoints(endpoints => endpoints.MapControllers());
-
-    app.MapGet("/", () => "AppX Client API");
-
-    //app.MapGroup("api/Identity")
-    //.WithTags("Identity")
-    //.MapIdentityApi<UserProfile>();
 
     app.UseEndpoints(endpoints => endpoints.MapControllers());
 

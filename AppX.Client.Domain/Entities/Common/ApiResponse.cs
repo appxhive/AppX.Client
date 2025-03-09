@@ -4,11 +4,24 @@ namespace AppX.Client.Domain.Entities.Common
 {
     public class ApiResponse
     {
-        public HttpStatusCode StatusCode { get; set; }
+        private HttpStatusCode _statusCode;
+        private bool _success;
+        public HttpStatusCode StatusCode 
+        { 
+            get{  return _statusCode; }
+            set { _statusCode = value; }
+        }
         public object? Data { get; set; }
         public MetaData? MetaData { get; set; }
         public string? ResponseMessage { get; set; }
-        public bool Success { get; set; } = false;
+        public bool Success 
+        {
+            get { return _success; } 
+            set
+            {
+                _success = (_statusCode == HttpStatusCode.OK) ? true : false;
+            }
+        }
     }
 
     public class ApiResponse<T>

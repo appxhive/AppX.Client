@@ -5,10 +5,10 @@ using AppX.Client.Infrastructure.Persistence;
 using AppX.Client.Infrastructure.Services.Email;
 using AppX.Client.Infrastructure.Services.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace AppX.Client.Infrastructure.Extensions;
 
@@ -16,6 +16,10 @@ public static class ServiceCollectionExtensions
 {
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddHttpContextAccessor();
+
+        services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
         //PostgreSql:
         services.AddDbContext<AppxhiveDbContext>(options =>
         options.UseNpgsql(configuration.GetConnectionString("AppxhivePostgreSqlDb")));

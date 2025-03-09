@@ -9,14 +9,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Serilog.Core;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace AppX.Client.Infrastructure.Services.Identity
 {
@@ -29,7 +28,8 @@ namespace AppX.Client.Infrastructure.Services.Identity
         SignInManager<UserProfile> signInManager,
         IHttpContextAccessor httpContextAccesor,
         UrlEncoder urlEncoder,
-        ILogger<IdentityService> logger
+        ILogger<IdentityService> logger,
+        IServiceProvider serviceProvider
         ) : IIdentityService
     {
         public async Task<ApiResponse> ConfirmEmailAsync(string userId, string token)
@@ -463,20 +463,24 @@ namespace AppX.Client.Infrastructure.Services.Identity
 
             return response;
         }
-        public ApiResponse ForgotPassword()
+        public async Task<ApiResponse> ForgotPassword()
         {
-            return new ApiResponse
+            var response = new ApiResponse
             {
                 StatusCode = HttpStatusCode.BadRequest,
                 Data = null,
                 MetaData = null,
-                ResponseMessage = null,
+                ResponseMessage = "Forgot Password",
             };
+
+            await Task.Delay(20);
+
+            return response;
         }
 
-        public async Task<ApiResponse> ForgotPassword(ForgotPasswordDto model)
+        public async Task<ApiResponse> ForgotPassword(ForgotPasswordDto dto)
         {
-            logger.LogInformation($"ForgotPassword has been invoked for user {model.Email}");
+            logger.LogInformation($"ForgotPassword has been invoked for user {dto.Email}");
 
             var response = new ApiResponse
             {
@@ -486,7 +490,7 @@ namespace AppX.Client.Infrastructure.Services.Identity
                 ResponseMessage = null,
             };
 
-            var user = await userManager.FindByEmailAsync(model.Email);
+            var user = await userManager.FindByEmailAsync(dto.Email);
 
             if (user is null)
             {
@@ -495,6 +499,7 @@ namespace AppX.Client.Infrastructure.Services.Identity
                 return response;
             }
 
+            
             var url = $"{configuration["AppXHive:Host"]}" + "Email/SendAsync";
 
             var token = await userManager.GeneratePasswordResetTokenAsync(user);
@@ -503,7 +508,7 @@ namespace AppX.Client.Infrastructure.Services.Identity
 
             var urlHelper = urlHelperFactory.GetUrlHelper(actionContext);
 
-            var callbackUrl = urlHelper.Action("ResetPassword", "Account", new
+            var callbackUrl = urlHelper.Action("ResetPassword", "UserAccounts", new
             {
                 userid = user.Id,
                 code = token
@@ -511,15 +516,15 @@ namespace AppX.Client.Infrastructure.Services.Identity
 
             var composedEmail = emailComposer.Compose(
                 "noreply@appxhive.com",
-                $"{model.Email}",
+                $"{dto.Email}",
                 "",
-                "Reset password email confirmation",
-                $"Please confirm your : <a href=\"{callbackUrl}\">confirm link</a>" +
+                "Reset password link",
+                $"Click the link to reset you password: <a href=\"{callbackUrl}\">link</a>" +
                 "<br/>" +
                 "<p>Powered By: <p/>" +
                 "<h1>AppXHive Software Development Services<h1/>",
                 "",
-                $"{configuration["AppXClient:RegisterUser:ResetConfirmation1"]}"
+                $"{configuration["AppXClient:RegisterUser:Confirmation1"]}"
             );
 
             using (var httpClient = new HttpClient())
@@ -546,6 +551,75 @@ namespace AppX.Client.Infrastructure.Services.Identity
 
             return response;
         }
+
+        #region [HttpGet] ResetPassword
+        public async Task<ApiResponse> ResetPassword(string code = null)
+        {
+            var response = new ApiResponse
+            {
+                StatusCode = HttpStatusCode.OK,
+                Data = code,
+                MetaData = null,
+                ResponseMessage = "Reset Password",
+                Success = true
+            };
+
+            await Task.Delay(20);
+
+            return response;
+        }
+        #endregion
+
+        #region [HttpPost] ResetPassword
+        public async Task<ApiResponse> ResetPassword(ResetPasswordDto dto) 
+        {
+            var response = new ApiResponse
+            {
+                StatusCode = HttpStatusCode.BadRequest,
+                Data = null,
+                MetaData = null,
+                ResponseMessage = null,
+            };
+
+            //get user's attribute so that we can find the user
+
+            var actionContext = actionContextAccessor.ActionContext!;
+
+            //var queryString = actionContext.HttpContext.Request.QueryString.Value;
+            //var queryString = _queryStringService.RetrieveQueryString();
+            //ArgumentNullException.ThrowIfNullOrEmpty(queryString);
+
+            //var hcontext = serviceProvider.GetService<IHttpContextAccessor>();
+
+            var queryString = actionContext.HttpContext.Request.Query["userid"].ToString() ?? actionContext.HttpContext.Request.QueryString.Value;
+
+            int startIndex = queryString.IndexOf("=") + 1; //+1 to include =
+            int lastIndex = queryString.LastIndexOf("=") - 13;//char lenght of (?userid=) + (&code=)
+            var userId = queryString.Substring(startIndex, lastIndex);
+
+            var user = await userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                response.StatusCode = HttpStatusCode.NotFound;
+                response.ResponseMessage = "User not found or does not exists.";
+                return response;
+            }
+
+            var result = await userManager.ResetPasswordAsync(user, dto.Code, dto.Password);
+
+            response.Data = result;
+
+            if (result.Succeeded)
+            {
+                response.StatusCode = HttpStatusCode.OK;
+                response.ResponseMessage = "Your password has been successfully reset.";
+                return response;
+            }
+
+            return response;
+        }
+        #endregion
 
     }
 }
